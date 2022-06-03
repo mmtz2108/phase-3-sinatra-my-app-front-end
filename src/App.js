@@ -1,48 +1,72 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import MonsterContainer from "./MonsterContainer";
-//import {Route, Switch, Link} from "react-router-dom"
-//import NewMonsterForm from "./NewDocForm";
+import MonsterTypes from "./MonsterTypes";
+import Dropdown from "./Dropdown";
+import NavBar from "./NavBar";
+import { Route, Switch, Link } from "react-router-dom";
+import AddMonsterForm from "./AddMonsterForm"
 
 function App() {
   const [monsters, setMonsters] = useState([]);
-  const [search, setSearch] = useState("");
+  const [types, setTypes] = useState([]);
+
+  const getMonsters = () => {
+    fetch("http://localhost:9292/monsters")
+      .then((r) => r.json())
+      .then((data) => setMonsters(data));
+  }
+
+  const deleteMonster = (id) => {
+    fetch(`http://localhost:9292/monsters/${id}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+              },
+        }).then(() => {
+          getMonsters()
+        });
+  }
+
+  useEffect(() => {
+      getMonsters()
+
+  
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:9292/monster-types")
-      .then(r => r.json())
-      .then(data => setMonsters(data))
-  }, []);
+    .then((r) => r.json())
+    .then((data) => setTypes(data));
+}, []);
 
-  //const handleSearch = (e) => {
-  //  setSearch(e.target.value)
-  //}
-
-  //const addNewDoc = (newMonster) => {
-   // setMonsters([...monsters, newMonster])
-  //}
-
-   //const displayedMonsters = listings.filter(listing => listing.title.toLowerCase().includes(search.toLowerCase())
-   //);
+  const addNewMonster = (newMonster) => {
+  setMonsters([...monsters, newMonster])
+  }
 
   return (
-    <>
-    <Header  />
-    <div className="app">
-    
-      
-      <MonsterContainer
-        monsters={monsters}
-      />
-      
-    
+    <div>
+      <Header />
+      <div className="app">
+        <NavBar />
+        <Switch>
+          <Route exact path="/">
+            <MonsterContainer monsters={monsters} deleteMonster={deleteMonster}/>
+          </Route>
+          <Route path="/new-monster">
+            <AddMonsterForm addNewMonster={addNewMonster}/>
+          </Route>
+          <Route path="/monster-types">
+            <MonsterTypes types={types}/>
+          </Route>
+          {/* <Route path="/new-monster"> // ADD TYPES
+            <AddMonsterTypes addMonsterTypes={addMonsterTypes}/>
+          </Route> */}
+        </Switch>
+      </div>
     </div>
-    </>
   );
 }
 
 export default App;
-//search={search} handleSearch={handleSearch}
-//<Route path='/newdocform'>
-     // <NewDocForm addNewDoc={addNewDoc}/>
-   // </Route>
+
