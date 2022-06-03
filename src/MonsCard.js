@@ -1,12 +1,16 @@
 import React from "react";
 //import {Link} from "react-router-dom"
 
-function MonsCard({ monsInfo, deleteCallback }
+function MonsCard({ monsInfo, deleteCallback, displayEditForm, setEditMonster }
 ) {
 
   const handleClick = (e) => {
     e.preventDefault()
     deleteCallback(monsInfo.id)
+  }
+
+  const handleEditClick = () => {
+    setEditMonster(monsInfo)
   }
 
   return (
@@ -18,6 +22,7 @@ function MonsCard({ monsInfo, deleteCallback }
       <p>{monsInfo.description}</p>
       <p>{monsInfo.abilities}</p>
         <button onClick={handleClick}>Delete</button>
+        <button onClick={handleEditClick}>Edit</button>
         
       </div>
     </li>

@@ -13,6 +13,9 @@ function NavBar() {
         <li>
           <Link to="/monster-types">Monster Types</Link>
         </li>
+        <li>
+          <Link to="/abilities">Monster Abilities</Link>
+        </li>
         
       </div>
 	);

@@ -1,32 +1,32 @@
-import React, {useState} from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useState } from 'react'
 
-const AddMonsterForm = ({addNewMonster}) => {
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [monsterType, setMonsterType] = useState('')
+const EditForm = ({monster, editMonster}) => {
+    const [name, setName] = useState(monster.name)
+    const [description, setDescription] = useState(monster.description)
+    const [monsterType, setMonsterType] = useState(monster.monsterType.name)
     
-    const history = useHistory()
+
     
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('http://localhost:9292/monsters', {
-            method: 'POST',
+        fetch(`http://localhost:9292/monsters/${monster.id}`, {
+            method: 'PATCH',
             headers: {
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({
                   name: name,
                   description: description,
-                  monsterType: monsterType
+                  monster_type_id: monsterType.id,
+                monster_type_name: monsterType.name
                   
         })
     })
     .then(r => r.json())
     .then(data => {
-        addNewMonster(data)
-        history.push("/")
+        //addNewMonster(data)
+       debugger
     })
 
     setName('')
@@ -64,11 +64,11 @@ const AddMonsterForm = ({addNewMonster}) => {
       </div>
       <></>
       <button className="ui button" type="submit">
-        Add
+        Update
       </button>
     </form>
   </div>
 );
 }
 
-export default AddMonsterForm
+export default EditForm
